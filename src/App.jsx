@@ -24,7 +24,7 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to={homePath} replace /> : <HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to={homePath} replace /> : <LoginPage />} />
         <Route path="/register" element={isAuthenticated ? <Navigate to={homePath} replace /> : <RegisterPage />} />
 
