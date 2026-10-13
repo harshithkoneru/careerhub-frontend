@@ -4,7 +4,7 @@ const AUTH_KEY = 'careerhub-auth';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api',
-  timeout: 15000,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -43,6 +43,7 @@ api.interceptors.response.use(
     }
     const message = error.response?.data?.message
       || error.response?.data?.error
+      || (error.code === 'ECONNABORTED' ? 'The server is waking up — please wait a moment and try again.' : null)
       || error.message
       || 'Unable to connect to CareerHub. Check that the backend is running.';
     return Promise.reject(new Error(message));
