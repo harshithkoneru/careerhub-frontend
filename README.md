@@ -30,3 +30,5 @@ VITE_API_BASE_URL=http://localhost:8081/api
 ```
 
 Keep database credentials and the JWT secret in your local terminal environment; do not commit them.
+
+For the deployed Vercel site, set the build-time environment variable `VITE_API_BASE_URL` to `https://careerhub-backend-fau6.onrender.com/api`, then redeploy. Production builds also use that API URL when the variable is not set; local builds continue to default to `http://localhost:8081/api`.

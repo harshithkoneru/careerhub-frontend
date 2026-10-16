@@ -1,9 +1,12 @@
 import axios from 'axios';
 
 const AUTH_KEY = 'careerhub-auth';
+const defaultApiBaseURL = import.meta.env.PROD
+  ? 'https://careerhub-backend-fau6.onrender.com/api'
+  : 'http://localhost:8081/api';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || defaultApiBaseURL,
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json'
@@ -43,9 +46,15 @@ api.interceptors.response.use(
     }
     const message = error.response?.data?.message
       || error.response?.data?.error
-      || (error.code === 'ECONNABORTED' ? 'The server is waking up — please wait a moment and try again.' : null)
-      || error.message
-      || 'Unable to connect to CareerHub. Check that the backend is running.';
+      || (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT'
+        ? 'The request timed out. The backend may be starting up; please wait a moment and try again.'
+        : null)
+      || (error.response
+        ? `CareerHub returned an error (HTTP ${error.response.status}). Please try again.`
+        : error.request
+          ? 'Unable to reach CareerHub. Check your connection and try again.'
+          : error.message)
+      || 'Unable to connect to CareerHub. Please try again.';
     return Promise.reject(new Error(message));
   }
 );
